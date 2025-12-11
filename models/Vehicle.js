@@ -17,3 +17,4 @@ const vehicleSchema = new mongoose.Schema({
 
 
 export default mongoose.model("Vehicle", vehicleSchema);
+vehicleSchema.index({ locationGeo: "2dsphere" });
