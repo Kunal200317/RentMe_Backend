@@ -67,7 +67,13 @@ export const verifyOtp = async (req, res) => {
 
   await Otp.deleteMany({ email });
 
-  return res.cookie("token", token, { httpOnly: true, secure: true, sameSite: "none" }).json({
+  return res.cookie("token", token, { 
+    httpOnly: true, 
+    secure: true, 
+    sameSite: "none",
+    path: "/",
+    maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+  }).json({
     success: true,
     token,
     user,
