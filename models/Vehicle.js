@@ -15,6 +15,8 @@ const vehicleSchema = new mongoose.Schema({
   available: { type: Boolean, default: true },
 }, { timestamps: true });
 
-
-export default mongoose.model("Vehicle", vehicleSchema);
+// Create 2dsphere index for fast geospatial proximity searches
 vehicleSchema.index({ locationGeo: "2dsphere" });
+
+const Vehicle = mongoose.models.Vehicle || mongoose.model("Vehicle", vehicleSchema);
+export default Vehicle;
