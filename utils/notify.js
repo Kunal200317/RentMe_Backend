@@ -1,33 +1,33 @@
-import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 dotenv.config();
 
-// Simple Transporter for Gmail
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false, // TLS
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  tls: {
-    rejectUnauthorized: false, // For cloud environments
-  },
-  connectionTimeout: 10000, // 10 seconds
-  greetingTimeout: 10000,
-});
-
+/**
+ * Resend API ka use karke email bhejna (Built-in fetch use kiya hai, no package needed!)
+ */
 export const sendEmail = async ({ to, subject, html }) => {
   try {
-    const info = await transporter.sendMail({
-      from: `"${process.env.APP_NAME || 'My App'}" <${process.env.EMAIL_USER}>`,
-      to,
-      subject,
-      html,
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: `RentMe <onboarding@resend.dev>`, // Testing sender for Resend
+        to: [to],
+        subject: subject,
+        html: html,
+      }),
     });
-    console.log("Email sent successfully: ", info.messageId);
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log("Email sent successfully via Resend API! ID:", data.id);
+    } else {
+      console.error("Resend API Error:", data.message || data);
+    }
   } catch (err) {
-    console.error("sendEmail error:", err.message);
+    console.error("sendEmail fetch error:", err.message);
   }
 };
