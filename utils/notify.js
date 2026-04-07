@@ -4,11 +4,18 @@ dotenv.config();
 
 // Simple Transporter for Gmail
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false, // TLS
   auth: {
-    user: process.env.EMAIL_USER, // Aapka Gmail address
-    pass: process.env.EMAIL_PASS, // Aapka 16-digit APP PASSWORD
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
+  tls: {
+    rejectUnauthorized: false, // For cloud environments
+  },
+  connectionTimeout: 10000, // 10 seconds
+  greetingTimeout: 10000,
 });
 
 export const sendEmail = async ({ to, subject, html }) => {
