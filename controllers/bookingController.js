@@ -1,6 +1,5 @@
 import Booking from "../models/Booking.js";
 import Vehicle from "../models/Vehicle.js";
-import connectDB from "../utils/db.js";
 import Razorpay from "razorpay";
 import crypto from "crypto";
 
@@ -8,7 +7,6 @@ import crypto from "crypto";
 // Create Booking
 export const createBooking = async (req, res) => {
   try {
-    await connectDB();
     const { bookingData, amount } = req.body;
 
     // PEHLE CHECK VEHICLE AVAILABILITY - IMPORTANT
@@ -75,7 +73,6 @@ export const createBooking = async (req, res) => {
 
 export const verifyPayment = async (req, res) => {
   try {
-    await connectDB();
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature, bookingData, amount, bookingId } = req.body;
 
 
@@ -137,7 +134,6 @@ export const verifyPayment = async (req, res) => {
 
 export const getUserBookings = async (req, res) => {
   try {
-    await connectDB();
     const userId = req.id;
 
     const bookings = await Booking.find({ userId ,paymentStatus: { $in: ['half_paid', 'full_paid'] }})
@@ -160,7 +156,6 @@ export const getUserBookings = async (req, res) => {
 
 export const ownerBookings = async (req, res) => {
   try {
-    await connectDB();
     const ownerId = req.id; // token se aayega (verifyToken middleware)
 
     const bookings = await Booking.find({ ownerId })
@@ -180,7 +175,6 @@ export const ownerBookings = async (req, res) => {
 
 export const handleBookingApproval = async (req, res) => {
   try {
-    await connectDB();
     const { bookingId } = req.params;
     const { action } = req.query;
 
@@ -239,7 +233,6 @@ export const updateBookingStatus = async (req, res) => {
 // createBookingRequest function mein yeh ensure karein
 export const createBookingRequest = async (req, res) => {
   try {
-    await connectDB();
     const { vehicleId, startDate, endDate, totalDays, totalPrice, userLocation } = req.body;
     const userId = req.id;
 
@@ -306,7 +299,6 @@ export const createBookingRequest = async (req, res) => {
 
 export const handledeleteBooking = async (req, res) => {
  try {
-    await connectDB();
     const { id } = req.params;
     const deletedBooking = await Booking.findByIdAndDelete(id);
     

@@ -1,10 +1,7 @@
 import Vehicle from "../models/Vehicle.js";
-import connectDB from "../utils/db.js";
 
 export const addVehicle = async (req, res) => {
   try {
-    await connectDB();
-
     const { vehicleType, brand, model, rentPerDay, location, latitude, longitude } = req.body;
     const ownerId = req.id;
 
@@ -75,7 +72,6 @@ export const addVehicle = async (req, res) => {
 
 export const getAllVehicles = async (req, res) => {
   try {
-    await connectDB();
     const vehicles = await Vehicle.find({ available: true }).populate("ownerId", "name mobile");
     res.json({ success: true, vehicles });
   } catch (err) {
@@ -85,7 +81,6 @@ export const getAllVehicles = async (req, res) => {
 
 export const getMyVehicles = async (req, res) => {
   try {
-    await connectDB();
     const ownerId = req.id;
     const vehicles = await Vehicle.find({ ownerId });
     res.json({ success: true, vehicles });
@@ -96,7 +91,6 @@ export const getMyVehicles = async (req, res) => {
 
 export const getNearbyVehicles = async (req, res) => {
   try {
-    await connectDB();
     const { lat, lng, maxDistance = 50000 } = req.query; // Default 50km
 
     // Validation improve karein
@@ -175,8 +169,6 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 
 export const findparticularVehicle = async (req, res) => {
   try {
-    await connectDB();  
-
     const { id } = req.params;
 
     const vehicle = await Vehicle.findById(id).populate("ownerId", "name mobile");

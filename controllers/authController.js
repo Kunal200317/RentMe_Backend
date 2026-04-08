@@ -2,13 +2,11 @@ import Otp from "../models/Otp.js";
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 import { sendEmail } from "../utils/notify.js";
-import connectDB from "../utils/db.js";
 
 
 export const sendOtp = async (req, res) => {
   try {
     
-    await connectDB();
     const { email } = req.body;
     const otp = Math.floor(100000 + Math.random() * 900000); // 6-digit OTP
 
@@ -39,7 +37,6 @@ export const sendOtp = async (req, res) => {
 
 
 export const verifyOtp = async (req, res) => {
-  await connectDB();
   const { email, otp, name, role } = req.body;
   if (!email || !otp || !name || !role) return res.status(400).json({ message: "Email, OTP, name, and role are required" });
 
@@ -114,7 +111,6 @@ export const logout = async (req, res) => {
 
 export const checkUserExists = async (req, res) => {
     try {
-      await connectDB();
         const { email } = req.body;
         
         // Check if email exists in database
@@ -141,7 +137,6 @@ export const checkUserExists = async (req, res) => {
 
 export const UserProfile = async (req, res) => {
   try {
-    await connectDB();
     const user = req.id;
     const profile = await User.findById(user).select("-__v");
     res.status(200).json({ success: true, profile });
@@ -153,7 +148,6 @@ export const UserProfile = async (req, res) => {
 
 export const UpdateProfile = async (req, res) => {
   try {
-    await connectDB();
     
     console.log('Request Body:', req.body);
     console.log('Request File:', req.file);
