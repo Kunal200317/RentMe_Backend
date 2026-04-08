@@ -13,11 +13,11 @@ router.post("/add", verifyToken, verifyOwner, upload.array("images", 5), addVehi
 // Anyone can see vehicles
 router.get("/", getAllVehicles);
 // Anyone can see nearby vehicles
-router.get("/nearby", verifyToken, getNearbyVehicles);
+router.get("/nearby", getNearbyVehicles);
 
 router.get("/my", verifyToken, getMyVehicles);
 
-router.get("/:id", verifyToken, findparticularVehicle);
+router.get("/:id", findparticularVehicle);
 
 
 
